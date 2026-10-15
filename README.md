@@ -1,4 +1,4 @@
-# Slipgate Android 0.3.0 — experimental (Telegram / TikTok / TCP+UDP)
+# Slipgate Android 0.3.1 — experimental (Telegram / TikTok / TCP+UDP)
 
 **The v0.1.0 APK was not verified to bypass DPI and failed a real user's test. Do not treat a successful build or a Connected status as evidence that DPI bypass works.**
 
@@ -29,3 +29,4 @@ Roadmap: device network tests, accurate Slipgate-equivalent strategies where ava
 - **Apps**: Main screen menu **DPI: приложения и TCP/UDP**, then **App filter / Выбор приложений** (existing ByeByeDPI VPN app list). Choose a whitelist to apply DPI only to selected apps or disable filter for all. This affects the VPN mode, not Proxy mode.
 - **TCP/UDP modes** in Settings: Automatic (keep tested strategy), TCP only (disable UDP transport; may break video/calls), TCP + UDP (add an experimental UDP-desync stage). The last mode is not guaranteed and is not a kernel-packet Zapret-equivalent. Restart service after changing.
 - Android 8+ is now required by integrated Telegram module (formerly Android 5+ for standalone ByeByeDPI). GPL-3.0 for Slipgate/ByeByeDPI; Telegram module is MIT (copyright crim50n), see upstream LICENSE.
+\n## v0.3.1 quick tile fix\n- The app's single Quick Settings tile now has the Slipgate app icon and always toggles **ByeDPI VPN mode** (not local SOCKS proxy mode), regardless of the selected main-screen connection mode.\n- The second Telegram quick tile is removed to avoid two tiles for separate services; Telegram MTProto/WS proxy stays available from the menu.\n- If VPN permission is missing, the tile opens the main activity for approval instead of silently doing nothing.\n- Background tile state sync is requested when the VPN status changes. On some Android launchers you may need to remove the old cached tiles and add the new Slipgate tile again.\n- This release does **not yet** implement SpeedFix/Xray or a hybrid tunnel. Do not assume importing the subscription into V2RayTun makes ByeDPI handle TikTok or ChatGPT.\n

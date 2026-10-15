@@ -17,7 +17,7 @@ jobs:
       - name: Validate port data
         run: |
           python3 -m unittest discover -s tests -v
-          python3 -m py_compile scripts/apply_port_v2.py scripts/integrate_telegram.py scripts/add_dpi_modes.py
+          python3 -m py_compile scripts/apply_port_v2.py scripts/integrate_telegram.py scripts/add_dpi_modes.py scripts/fix_quick_tile.py
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -43,7 +43,7 @@ jobs:
           test -f upstream/app/build/outputs/apk/debug/app-universal-debug.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: SlipgateAndroid-v0.3.0-debug-APK
+          name: SlipgateAndroid-v0.3.1-debug-APK
           path: upstream/app/build/outputs/apk/debug/app-universal-debug.apk
           if-no-files-found: error
       - name: APK SHA256

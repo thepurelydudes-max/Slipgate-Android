@@ -14,3 +14,4 @@ git -C "$ROOT/telegram-upstream" checkout --detach 41f4d4ff9a5f14c5ffbc5b9a46620
 test "$(git -C "$ROOT/telegram-upstream" rev-parse HEAD)" = "41f4d4ff9a5f14c5ffbc5b9a4662099cd11c7738"
 python3 "$ROOT/scripts/integrate_telegram.py" --android "$DEST" --telegram "$ROOT/telegram-upstream"
 python3 "$ROOT/scripts/add_dpi_modes.py" --android "$DEST"
+python3 "$ROOT/scripts/fix_quick_tile.py" --android "$DEST" --telegram "$ROOT/telegram-upstream"
