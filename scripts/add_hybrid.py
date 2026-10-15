@@ -50,9 +50,12 @@ def apply(android,root):
             ?.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu?.add(Menu.NONE, 830043, Menu.NONE, "DPI: приложения и TCP/UDP")''')
     gradle=android/"app/build.gradle.kts"
+    one(gradle,'val abis = setOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")','val abis = setOf("arm64-v8a")')
     one(gradle,'dependencies {',
         '''dependencies {
     implementation(files("libs/libbox.aar"))''')
+    service=kotlin/"services/ByeDpiVpnService.kt"
+    one(service,"        return START_NOT_STICKY","        return START_STICKY")
     ET.parse(manifest)
     print("Hybrid routes integrated, ByeDPI remains default.")
 

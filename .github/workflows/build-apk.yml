@@ -42,14 +42,14 @@ jobs:
       - name: Compile APK
         working-directory: upstream
         run: bash ./gradlew --no-daemon :app:assembleDebug
-      - name: Check universal APK
+      - name: Check ARM64 APK
         run: |
           find upstream/app/build/outputs/apk/debug -name '*.apk' -print
-          test -f upstream/app/build/outputs/apk/debug/app-universal-debug.apk
+          test -f upstream/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: SlipgateAndroid-v0.4.0-alpha-APK
-          path: upstream/app/build/outputs/apk/debug/app-universal-debug.apk
+          name: SlipgateAndroid-v0.4.0-alpha-arm64-APK
+          path: upstream/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk
           if-no-files-found: error
       - name: APK SHA256
-        run: sha256sum upstream/app/build/outputs/apk/debug/app-universal-debug.apk
+        run: sha256sum upstream/app/build/outputs/apk/debug/app-arm64-v8a-debug.apk
