@@ -1,0 +1,38 @@
+name: Build Android APK
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test port data
+        run: python3 -m unittest discover -s tests -v
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Install native Android tools
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager --install 'platforms;android-34' 'build-tools;34.0.0' 'cmake;3.22.1' 'ndk;26.3.11579264'
+      - name: Apply Slipgate port to ByeDPI Android
+        run: bash scripts/prepare_upstream.sh
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Compile debug-signed APK
+        working-directory: upstream
+        run: bash ./gradlew --no-daemon :app:assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SlipgateAndroid-debug-APK
+          path: upstream/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 30
+      - name: APK fingerprint
+        run: sha256sum upstream/app/build/outputs/apk/debug/*.apk
