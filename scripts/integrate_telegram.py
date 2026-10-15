@@ -24,7 +24,11 @@ plugins {
 android {
     namespace = "dev.minios.tgwsproxy"
     compileSdk = 36
-    defaultConfig { minSdk = 26 }
+    defaultConfig {
+        minSdk = 26
+        buildConfigField("int", "VERSION_CODE", "10")
+        buildConfigField("String", "VERSION_NAME", '"' + "1.7.0" + '"')
+    }
     buildFeatures { compose = true; buildConfig = true }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -62,6 +66,7 @@ dependencies {
         'id("org.jetbrains.kotlin.android") version "2.2.0" apply false\n    id("org.jetbrains.kotlin.plugin.compose") version "2.2.0" apply false\n    id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0" apply false')
     with (android/"settings.gradle.kts").open("a",encoding="utf-8") as file:
         file.write('\ninclude(":telegram")\nproject(":telegram").projectDir = file("../telegram-upstream/app")\n')
+    replace_one(android/"app/build.gradle.kts",'minSdk = 21','minSdk = 26')
     replace_one(android/"app/build.gradle.kts","dependencies {",'dependencies {\n    implementation(project(":telegram"))')
     manifest=source/"src/main/AndroidManifest.xml"
     manifest.write_text("""<?xml version="1.0" encoding="utf-8"?>
