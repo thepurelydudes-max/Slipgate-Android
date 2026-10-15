@@ -33,7 +33,7 @@ def apply(repo,lists):
     patch(gradle,'applicationId = "io.github.romanvht.byedpi"',
           'applicationId = "com.farliner.slipgate.android"')
     patch(gradle,'versionName = "1.8.2"',
-          'versionName = "0.3.0-slipgate"')
+          'versionName = "0.3.1-slipgate"')
     manifest=repo/"app/src/main/AndroidManifest.xml"
     m=manifest.read_text(encoding="utf-8")
     for original in ('@mipmap/ic_launcher_round','@mipmap/ic_launcher','@mipmap/ic_banner'):
