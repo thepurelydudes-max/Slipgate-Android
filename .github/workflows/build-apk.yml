@@ -11,36 +11,40 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 55
+    timeout-minutes: 65
     steps:
       - uses: actions/checkout@v4
-      - name: Test port data
-        run: python3 -m unittest discover -s tests -v
+      - name: Validate port data
+        run: |
+          python3 -m unittest discover -s tests -v
+          python3 -m py_compile scripts/apply_port_v2.py
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-      - name: Use preinstalled Android SDK
+      - name: Locate Android SDK
         run: |
           SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n1)
           test -n "$SDKMANAGER"
           echo "$(dirname "$SDKMANAGER")" >> "$GITHUB_PATH"
-          "$SDKMANAGER" --version
-      - name: Install native Android tools
+      - name: Install SDK and NDK
         run: |
-          yes | sdkmanager --licenses > /dev/null || true
-          sdkmanager --install 'platforms;android-34' 'build-tools;34.0.0' 'cmake;3.22.1' 'ndk;26.3.11579264'
-      - name: Apply Slipgate port to ByeDPI Android
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager --install 'platforms;android-36' 'build-tools;36.0.0' 'cmake;3.22.1' 'ndk;26.3.11579264'
+      - name: Prepare pinned modern DPI app
         run: bash scripts/prepare_upstream.sh
       - uses: gradle/actions/setup-gradle@v4
-      - name: Compile debug-signed APK
+      - name: Compile APK
         working-directory: upstream
         run: bash ./gradlew --no-daemon :app:assembleDebug
+      - name: Check universal APK
+        run: |
+          find upstream/app/build/outputs/apk/debug -name '*.apk' -print
+          test -f upstream/app/build/outputs/apk/debug/app-universal-debug.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: SlipgateAndroid-debug-APK
-          path: upstream/app/build/outputs/apk/debug/*.apk
+          name: SlipgateAndroid-v0.2.0-debug-APK
+          path: upstream/app/build/outputs/apk/debug/app-universal-debug.apk
           if-no-files-found: error
-          retention-days: 30
-      - name: APK fingerprint
-        run: sha256sum upstream/app/build/outputs/apk/debug/*.apk
+      - name: APK SHA256
+        run: sha256sum upstream/app/build/outputs/apk/debug/app-universal-debug.apk
