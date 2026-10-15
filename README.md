@@ -1,4 +1,4 @@
-# Slipgate Android 0.3.1 — experimental (Telegram / TikTok / TCP+UDP)
+# Slipgate Android 0.4.0-alpha — experimental (Telegram / TikTok / TCP+UDP)
 
 **The v0.1.0 APK was not verified to bypass DPI and failed a real user's test. Do not treat a successful build or a Connected status as evidence that DPI bypass works.**
 
@@ -30,3 +30,12 @@ Roadmap: device network tests, accurate Slipgate-equivalent strategies where ava
 - **TCP/UDP modes** in Settings: Automatic (keep tested strategy), TCP only (disable UDP transport; may break video/calls), TCP + UDP (add an experimental UDP-desync stage). The last mode is not guaranteed and is not a kernel-packet Zapret-equivalent. Restart service after changing.
 - Android 8+ is now required by integrated Telegram module (formerly Android 5+ for standalone ByeByeDPI). GPL-3.0 for Slipgate/ByeByeDPI; Telegram module is MIT (copyright crim50n), see upstream LICENSE.
 \n## v0.3.1 quick tile fix\n- The app's single Quick Settings tile now has the Slipgate app icon and always toggles **ByeDPI VPN mode** (not local SOCKS proxy mode), regardless of the selected main-screen connection mode.\n- The second Telegram quick tile is removed to avoid two tiles for separate services; Telegram MTProto/WS proxy stays available from the menu.\n- If VPN permission is missing, the tile opens the main activity for approval instead of silently doing nothing.\n- Background tile state sync is requested when the VPN status changes. On some Android launchers you may need to remove the old cached tiles and add the new Slipgate tile again.\n- This release does **not yet** implement SpeedFix/Xray or a hybrid tunnel. Do not assume importing the subscription into V2RayTun makes ByeDPI handle TikTok or ChatGPT.\n
+## 0.4.0-alpha: opt-in hybrid routing (not device-verified)
+
+The hybrid mode starts in-process sing-box (libbox 1.14.3) as a SOCKS5 listener between the existing HEV TUN translator and ByeDPI. There is only one Android VPN service. When the profile is disabled or libbox cannot start, existing ByeDPI remains the only route.
+
+TLS/QUIC/HTTP sniffing matches domains for TikTok and OpenAI, plus user-defined domains; selected traffic goes through the imported remote node while remaining traffic uses ByeDPI. This is selective routing by domain, NOT automatic failover for any silently blocked connection. ECH, UDP, IP-only destinations and DNS may require further device debugging.
+
+Import an HTTPS subscription locally via the new SpeedFix / Гибридный режим menu, select server, enable hybrid, and reconnect. Supports common VLESS/Trojan/VMess URI lines, base64 node lists, and sing-box JSON outbounds. Clash YAML and some transports are not yet supported. Credentials and subscription URLs are encrypted using Android Keystore AES-GCM on-device, with Android backup disabled; they are not in GitHub or APK.
+
+The native AAR is pinned to singbox-android/libbox 1.14.3 and checksum validated by CI (SHA256 6f1f295b1d988d4875546a48cb90a90e2b5f70ca10432f1a8d95e757a76f01d9). No additional polling loops, wakelocks or background heartbeats are added by hybrid router. Telegram MTProto remains independent and can still reconnect under system Doze; users can use battery-optimization exemption with potential battery cost. Connectivity and battery performance have not been field verified.

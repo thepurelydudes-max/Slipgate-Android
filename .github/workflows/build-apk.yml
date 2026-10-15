@@ -17,7 +17,7 @@ jobs:
       - name: Validate port data
         run: |
           python3 -m unittest discover -s tests -v
-          python3 -m py_compile scripts/apply_port_v2.py scripts/integrate_telegram.py scripts/add_dpi_modes.py scripts/fix_quick_tile.py
+          python3 -m py_compile scripts/apply_port_v2.py scripts/integrate_telegram.py scripts/add_dpi_modes.py scripts/fix_quick_tile.py scripts/add_hybrid.py
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -33,6 +33,11 @@ jobs:
           sdkmanager --install 'platforms;android-36' 'build-tools;36.0.0' 'cmake;3.22.1' 'ndk;26.3.11579264'
       - name: Prepare pinned modern DPI app
         run: bash scripts/prepare_upstream.sh
+      - name: Download pinned native sing-box library
+        run: |
+          mkdir -p upstream/app/libs
+          curl -fL --retry 4 --retry-delay 3 --connect-timeout 20 'https://github.com/singbox-android/libbox/releases/download/1.14.3/libbox.aar' -o upstream/app/libs/libbox.aar
+          echo '6f1f295b1d988d4875546a48cb90a90e2b5f70ca10432f1a8d95e757a76f01d9  upstream/app/libs/libbox.aar' | sha256sum -c -
       - uses: gradle/actions/setup-gradle@v4
       - name: Compile APK
         working-directory: upstream
@@ -43,7 +48,7 @@ jobs:
           test -f upstream/app/build/outputs/apk/debug/app-universal-debug.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: SlipgateAndroid-v0.3.1-debug-APK
+          name: SlipgateAndroid-v0.4.0-alpha-APK
           path: upstream/app/build/outputs/apk/debug/app-universal-debug.apk
           if-no-files-found: error
       - name: APK SHA256

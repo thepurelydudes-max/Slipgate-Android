@@ -15,3 +15,4 @@ test "$(git -C "$ROOT/telegram-upstream" rev-parse HEAD)" = "41f4d4ff9a5f14c5ffb
 python3 "$ROOT/scripts/integrate_telegram.py" --android "$DEST" --telegram "$ROOT/telegram-upstream"
 python3 "$ROOT/scripts/add_dpi_modes.py" --android "$DEST"
 python3 "$ROOT/scripts/fix_quick_tile.py" --android "$DEST" --telegram "$ROOT/telegram-upstream"
+python3 "$ROOT/scripts/add_hybrid.py" --android "$DEST" --root "$ROOT"
