@@ -1,4 +1,4 @@
-# Slipgate Android 0.2.0 — experimental
+# Slipgate Android 0.3.0 — experimental (Telegram / TikTok / TCP+UDP)
 
 **The v0.1.0 APK was not verified to bypass DPI and failed a real user's test. Do not treat a successful build or a Connected status as evidence that DPI bypass works.**
 
@@ -22,3 +22,10 @@ The GitHub workflow clones the exact ByeByeDPI 1.8.2 source revision with native
 This GPL-3.0 project contains derivative work and original site lists from Slipgate 1.8.0. All upstream component copyrights belong to their respective authors. No guarantee of circumvention, privacy, or Android compatibility is made.
 
 Roadmap: device network tests, accurate Slipgate-equivalent strategies where available, a Slipgate-specific UI, and separate Telegram proxy integration.
+
+## v0.3 additions (experimental)
+- **Integrated Telegram MTProto WebSocket proxy:** MIT-licensed Kotlin implementation from crim50n/tg-ws-proxy-android at pinned commit 41f4d4ff9a5f14c5ffbc5b9a4662099cd11c7738. Open via main screen menu **Telegram MTProto / WS**, start its local listener, then tap **Open in Telegram** to configure proxy; not the same service as ByeDPI. The proxy is bound to localhost by default and does not claim proven Telegram connectivity yet.
+- **TikTok domains** available in the built-in strategy tester as `TikTok`; video and upload may need different TCP/UDP strategies.
+- **Apps**: Main screen menu **DPI: приложения и TCP/UDP**, then **App filter / Выбор приложений** (existing ByeByeDPI VPN app list). Choose a whitelist to apply DPI only to selected apps or disable filter for all. This affects the VPN mode, not Proxy mode.
+- **TCP/UDP modes** in Settings: Automatic (keep tested strategy), TCP only (disable UDP transport; may break video/calls), TCP + UDP (add an experimental UDP-desync stage). The last mode is not guaranteed and is not a kernel-packet Zapret-equivalent. Restart service after changing.
+- Android 8+ is now required by integrated Telegram module (formerly Android 5+ for standalone ByeByeDPI). GPL-3.0 for Slipgate/ByeByeDPI; Telegram module is MIT (copyright crim50n), see upstream LICENSE.
