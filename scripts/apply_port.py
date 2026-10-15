@@ -77,17 +77,12 @@ def apply(root,folder):
 
     <androidx.preference.PreferenceCategory
         android:title="@string/about_category">""")
-    # Vector launcher icon is self-contained (no external binary required).
-    draw=src/"res/drawable"
+    # Original Slipgate launcher icon (pinned 1.8.0 asset).
+    import shutil
+    draw=src/"res/drawable-nodpi"
     draw.mkdir(exist_ok=True)
-    icon=draw/"slipgate_icon.xml"
-    icon.write_text("""<?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-android:width="108dp" android:height="108dp"
-android:viewportWidth="108" android:viewportHeight="108">
-<path android:fillColor="#101828" android:pathData="M0,0 L108,0 L108,108 L0,108 Z"/>
-<path android:fillColor="#35E1CE" android:pathData="M60,8 L27,57 L48,57 L39,100 L84,44 L59,44 Z"/>
-</vector>""",encoding="utf-8")
+    icon=draw/"slipgate_icon.png"
+    shutil.copyfile(folder/"slipgate-icon.png",icon)
     manifest=src/"AndroidManifest.xml"
     text=manifest.read_text(encoding="utf-8")
     for name in ("ic_launcher_foreground","ic_launcher_round","ic_launcher"):
@@ -129,7 +124,7 @@ object SlipgateProfiles {
                 "SlipgateProfiles.resolve(getPreferences())")
         replace(f,"import io.github.dovecoteescapee.byedpi.core.ByeDpiProxyPreferences",
                 "import io.github.dovecoteescapee.byedpi.core.ByeDpiProxyPreferences\nimport io.github.dovecoteescapee.byedpi.core.SlipgateProfiles")
-    for f in (en,ru/"slipgate_profiles.xml",settings,manifest,icon): ET.parse(f)
+    for f in (en,ru/"slipgate_profiles.xml",settings,manifest): ET.parse(f)
     print("Slipgate Android port applied",len(general),len(youtube),len(discord))
 
 if __name__=="__main__":
