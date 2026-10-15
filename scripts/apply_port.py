@@ -90,7 +90,7 @@ android:viewportWidth="108" android:viewportHeight="108">
 </vector>""",encoding="utf-8")
     manifest=src/"AndroidManifest.xml"
     text=manifest.read_text(encoding="utf-8")
-    for name in ("ic_launcher","ic_launcher_foreground","ic_launcher_round"):
+    for name in ("ic_launcher_foreground","ic_launcher_round","ic_launcher"):
         text=text.replace("@mipmap/"+name,"@drawable/slipgate_icon")
     manifest.write_text(text,encoding="utf-8")
     general,youtube,discord=load_profiles(folder)
